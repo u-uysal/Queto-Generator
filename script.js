@@ -25,22 +25,29 @@ function hideLoading() {
 async function GetQuote() {
     loading() //before anything happens
 
-    const apiUrl = 'http://quotes.stormconsultancy.co.uk/random.json';
+    const apiUrl = 'https://type.fit/api/quotes';
     console.log("keep refreshing")
     try {
         const response = await fetch(apiUrl);
         const data = await response.json()
+        console.log(data.length)
 
-        authorText.innerText = data.author
+
+        let quoteId = Math.floor(Math.random() * Math.floor(data.length));
+
+        let displayQuote = data[quoteId]
+        console.log(displayQuote)
+
+        authorText.innerText = displayQuote.author
 
 
         //change the font size according to lenght of the quote
-        if (data.quote.length > 100) {
+        if (displayQuote.text.length > 100) {
             quoteText.classList.add("long-quote")
         } else {
             quoteText.classList.remove("long-quote")
         }
-        quoteText.innerText = data.quote
+        quoteText.innerText = displayQuote.text
 
         hideLoading() // stop loader
     } catch (error) {

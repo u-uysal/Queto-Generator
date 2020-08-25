@@ -21,14 +21,14 @@ function hideLoading() {
 }
 
 function GetQuote() {
-  var apiUrl, response, data;
+  var apiUrl, response, data, quoteId, displayQuote;
   return regeneratorRuntime.async(function GetQuote$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
           loading(); //before anything happens
 
-          apiUrl = 'http://quotes.stormconsultancy.co.uk/random.json';
+          apiUrl = 'https://type.fit/api/quotes';
           console.log("keep refreshing");
           _context.prev = 3;
           _context.next = 6;
@@ -41,31 +41,35 @@ function GetQuote() {
 
         case 9:
           data = _context.sent;
-          authorText.innerText = data.author; //change the font size according to lenght of the quote
+          console.log(data.length);
+          quoteId = Math.floor(Math.random() * Math.floor(data.length));
+          displayQuote = data[quoteId];
+          console.log(displayQuote);
+          authorText.innerText = displayQuote.author; //change the font size according to lenght of the quote
 
-          if (data.quote.length > 100) {
+          if (displayQuote.text.length > 100) {
             quoteText.classList.add("long-quote");
           } else {
             quoteText.classList.remove("long-quote");
           }
 
-          quoteText.innerText = data.quote;
+          quoteText.innerText = displayQuote.text;
           hideLoading(); // stop loader
 
-          _context.next = 19;
+          _context.next = 23;
           break;
 
-        case 16:
-          _context.prev = 16;
+        case 20:
+          _context.prev = 20;
           _context.t0 = _context["catch"](3);
           console.log(_context.t0);
 
-        case 19:
+        case 23:
         case "end":
           return _context.stop();
       }
     }
-  }, null, null, [[3, 16]]);
+  }, null, null, [[3, 20]]);
 }
 
 function tweetQuote() {
