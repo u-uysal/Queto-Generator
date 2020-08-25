@@ -5,32 +5,44 @@ const quoteText = document.getElementById("quote")
 const authorText = document.getElementById("author")
 const buttonTwitter = document.getElementById("twitter")
 const newQuoteBtn = document.getElementById("new-quote")
+const loader = document.getElementById("loader")
 
 // get quote from api
 
+function loading() {
+    loader.hidden = false;
+    quoteContainer.hidden = true;
+}
+
+function hideLoading() {
+    if (!loader.hidden) {
+        quoteContainer.hidden = false
+        loader.hidden = true;
+    }
+}
+
+
 async function GetQuote() {
-    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-    const apiUrl = 'https://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json';
+    loading() //before anything happens
+
+    const apiUrl = 'http://quotes.stormconsultancy.co.uk/random.json';
     console.log("keep refreshing")
     try {
-        const response = await fetch(proxyUrl + apiUrl);
+        const response = await fetch(apiUrl);
         const data = await response.json()
 
-        // if author is blank 
-        if (data.quoteAuthor === "") {
-            authorText.innerText = "Unknow"
-        } else {
+        authorText.innerText = data.author
 
-            authorText.innerText = data.quoteAuthor
-        }
 
         //change the font size according to lenght of the quote
-        if (data.quoteText.length > 100) {
+        if (data.quote.length > 100) {
             quoteText.classList.add("long-quote")
         } else {
             quoteText.classList.remove("long-quote")
         }
-        quoteText.innerText = data.quoteText
+        quoteText.innerText = data.quote
+
+        hideLoading() // stop loader
     } catch (error) {
 
         console.log(error)
@@ -41,7 +53,7 @@ async function GetQuote() {
 function tweetQuote() {
     const quote = quoteText.innerText;
     const author = authorText.innerText;
-    const tweetUrl = `https://twitter.com/intent/tweet?text=${quote} - ${author}`;
+    const tweetUrl = `https://twitter.com/intent/tweet?text=${quote} - ${author}`; // thanks to this link you can tweet at your app
 
     window.open(tweetUrl, '_blank') // open this page at another url
 }
